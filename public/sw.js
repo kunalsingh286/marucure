@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marucure-offline-v4';
+const CACHE_NAME = 'marucure-offline-v5';
 
 // All the files and external CDNs required for the app to function offline
 const URLS_TO_CACHE = [
@@ -93,7 +93,13 @@ self.addEventListener('fetch', event => {
             
             // Otherwise try to fetch from network
             return fetch(event.request).then(networkResponse => {
-                // Optionally cache new successful responses dynamically here
+                // Dynamically cache ALL successful network responses (like Google Fonts .woff2 files)
+                if (networkResponse && networkResponse.status === 200 && networkResponse.type !== 'error') {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
                 return networkResponse;
             }).catch(err => {
                 console.warn('[Service Worker] Network request failed and no cache found:', event.request.url);
