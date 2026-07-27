@@ -2,13 +2,22 @@ const CACHE_NAME = 'marucure-offline-v1';
 
 // All the files and external CDNs required for the app to function offline
 const URLS_TO_CACHE = [
+    // --- Clinical App (PWA Node) ---
     './index.html',
     './app.js',
     './dashboard.css?v=2',
-    
-    // WebAssembly Models
     './assets/models/model_fir.tflite',
     './assets/models/model_silicosis.tflite',
+
+    // --- Marketing Website (Hackathon Demo Bulletproofing) ---
+    '../index.html',
+    '../about.html',
+    '../solutions.html',
+    '../style.css',
+    '../assets/hero.png',
+    '../assets/images/hero_edge_ai.png',
+    '../assets/images/solution_xray.png',
+    '../assets/images/solution_spiro.png',
 
     // TensorFlow.js Libraries
     'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js',
