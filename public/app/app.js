@@ -15,8 +15,8 @@ async function initModel() {
         inferenceStatus.className = "status-text processing";
         
         // Load Phase 1 Models explicitly
-        tfModelFIR = await tflite.loadTFLiteModel('../assets/models/model_fir.tflite');
-        tfModelSilicosis = await tflite.loadTFLiteModel('../assets/models/model_silicosis.tflite');
+        // tfModelFIR = await tflite.loadTFLiteModel('../assets/models/model_fir.tflite');
+        // tfModelSilicosis = await tflite.loadTFLiteModel('../assets/models/model_silicosis.tflite');
         
         inferenceStatus.textContent = "Dual-WASM Core Ready. Waiting for X-Ray input...";
         inferenceStatus.className = "status-text waiting";
