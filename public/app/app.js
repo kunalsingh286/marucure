@@ -1131,18 +1131,3 @@ async function renderOutbox() {
         queueList.insertBefore(div, queueList.firstChild);
     }
 }
-
-// ==========================================
-// FIX: DEMO CACHE BUSTER
-// ==========================================
-// Automatically unregister the aggressive service worker to prevent demo lockups
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-            registration.unregister().then(function(boolean) {
-                if (boolean) console.log('Service worker unregistered to fix demo caching.');
-            });
-        }
-    });
-}
-
