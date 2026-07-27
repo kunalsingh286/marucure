@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marucure-offline-v3';
+const CACHE_NAME = 'marucure-offline-v4';
 
 // All the files and external CDNs required for the app to function offline
 const URLS_TO_CACHE = [
@@ -85,7 +85,7 @@ self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
     
     event.respondWith(
-        caches.match(event.request).then(response => {
+        caches.match(event.request, { ignoreSearch: true }).then(response => {
             // Return cached response if found
             if (response) {
                 return response;
