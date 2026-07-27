@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions - MaruCure AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="nav-dark-bar">
+    <a href="index.html" class="logo">MARU<span class="accent">CURE</span></a>
+    <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="solutions.html" class="active">Solutions</a></li>
+    </ul>
+    <a href="app/index.html" class="nav-cta">Launch PWA Node</a>
+</nav>
+
+<section class="page-hero">
+    <div class="page-hero-inner">
+        <span class="eyebrow"><span class="eyebrow-dot"></span>The Architecture</span>
+        <h1>The Solution. The Expansions. The Ecosystem.</h1>
+        <p>MaruCure utilizes an advanced Dual-Pronged Edge AI pipeline for structural triage, married with a real-time Web-Bluetooth hardware interface for functional respiratory logic.</p>
+    </div>
+</section>
+
+<!-- THE SOLUTION -->
+<section class="section-soft" id="certified">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <span class="ce-badge" style="margin-bottom: 14px;">Structural Triage</span>
+            <h2 class="section-title" style="margin-bottom: 14px;">Dual-Model Edge AI</h2>
+            <p class="section-lead" style="margin: 0 auto;">
+                Designed specifically for offline execution, our WebAssembly engine runs two parallel Convolutional Neural Networks (DenseNet121) entirely in the browser cache without requiring internet connectivity.
+            </p>
+        </div>
+
+        <div class="solution-detail-grid">
+            <!-- Visual Mockup -->
+            <div class="solution-visual">
+                <img src="assets/images/solution_xray.png" alt="Dual-Model Edge AI Dashboard" style="border-radius: var(--r-md); box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%;">
+            </div>
+
+            <!-- Text Content -->
+            <div>
+                <div style="font-size: 12px; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px;">Two AI models · Run in parallel</div>
+                <h3 style="font-size: 22px; margin-bottom: 24px;">Every chest X-ray is analysed by both networks simultaneously.</h3>
+
+                <div class="card" style="margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <span class="ce-badge" style="margin: 0;">Phase 1 Filter</span>
+                        <span style="font-size: 11px; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">FIR Model</span>
+                    </div>
+                    <h4 style="font-size: 17px; margin-bottom: 6px;">Quality Control Model</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Detects distorted, blurry, or low-quality X-Rays taken in the dusty quarry environments. It actively rejects structurally unsound images to prevent false positives.</p>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <span class="ce-badge" style="margin: 0;">Phase 2 Pathology</span>
+                        <span style="font-size: 11px; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Silicosis Suggestive</span>
+                    </div>
+                    <h4 style="font-size: 17px; margin-bottom: 6px;">Pathology Model</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Hunts for the specific micro-nodular opacities characteristic of pneumoconiosis. Outputs a definitive probability score (0-100%).</p>
+                </div>
+
+                <div style="padding: 18px 22px; background: white; border-radius: var(--r-md); border-left: 4px solid var(--accent-blue); font-size: 13px; color: var(--text-secondary);">
+                    <strong style="color: var(--text-primary);">Total offline execution.</strong> The AI math runs natively inside the $150 Android tablet's RAM. No cloud required.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- THE ECOSYSTEM (Spirometry) -->
+<section style="padding: 6rem 4rem; background: white;">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <span class="ce-badge" style="margin-bottom: 14px; background: rgba(16, 185, 129, 0.1); color: var(--accent-green);">Functional Triage</span>
+            <h2 class="section-title" style="margin-bottom: 14px;">Web-Bluetooth Spirometry</h2>
+            <p class="section-lead" style="margin: 0 auto;">
+                Radiology alone cannot diagnose restrictive lung diseases. MaruCure integrates directly with physical hardware to measure the exact volume of air the miner can exhale.
+            </p>
+        </div>
+
+        <div class="solution-detail-grid">
+            <!-- Text Content -->
+            <div style="order: 2;">
+                <div style="font-size: 12px; color: var(--accent-green); font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px;">Hardware Integration</div>
+                <h3 style="font-size: 22px; margin-bottom: 24px;">Bypassing proprietary medical software.</h3>
+
+                <div class="card" style="margin-bottom: 16px;">
+                    <h4 style="font-size: 17px; margin-bottom: 6px;">Live Hex-Byte Parsing</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">We bypass expensive hospital machines by connecting our PWA directly to a pocket MIR Spirobank via Web-Bluetooth, parsing the raw Little-Endian bytes natively.</p>
+                </div>
+                
+                <div class="card" style="margin-bottom: 16px;">
+                    <h4 style="font-size: 17px; margin-bottom: 6px;">Temporal FEV1/FVC Math</h4>
+                    <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Using strict `performance.now()` clocks, the tablet calculates the exact FEV1 and FVC volume ratios, determining the exact level of restrictive lung failure.</p>
+                </div>
+            </div>
+
+            <!-- Visual Mockup -->
+            <div class="solution-visual" style="order: 1;">
+                <img src="assets/images/solution_spiro.png" alt="Bluetooth Spirometry Integration" style="border-radius: var(--r-md); box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OFFLINE REPORTING -->
+<section style="padding: 6rem 4rem; background: var(--bg-alt);">
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <span class="ce-badge" style="margin-bottom: 14px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">Clinical Output</span>
+            <h2 class="section-title" style="margin-bottom: 14px;">4-Zone Structured PDF & Thermal Receipts</h2>
+            <p class="section-lead" style="margin: 0 auto;">
+                Doctors cannot legally act on arbitrary UI percentages. MaruCure synthesizes the Dual-Pillar data into legally-defensible clinical documents, generated entirely offline at the quarry edge.
+            </p>
+        </div>
+        <div style="display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;">
+            <div class="card" style="flex: 1; min-width: 300px; border-top: 4px solid #8b5cf6;">
+                <h4 style="font-size: 18px; margin-bottom: 12px;">4-Zone PDF Generator</h4>
+                <p style="font-size: 14px; color: var(--text-secondary);">Instantly generates a highly-structured PDF containing Jan Aadhaar demographic matrices, ILO-aligned radiological interpretations, the embedded AI Heatmap, and SPIRO curves. No cloud rendering required.</p>
+            </div>
+            <div class="card" style="flex: 1; min-width: 300px; border-top: 4px solid var(--text-primary);">
+                <h4 style="font-size: 18px; margin-bottom: 12px;">Thermal Printer Integration</h4>
+                <p style="font-size: 14px; color: var(--text-secondary);">Miners without smartphones cannot receive PDFs. The platform connects to rugged, $50 Bluetooth thermal receipt printers to hand the miner a physical triage slip containing an encrypted Verification QR code on the spot.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <div class="footer-logo">MARU<span class="accent">CURE</span></div>
+            <p>Empowering Asha workers with offline AI triage to eradicate Silicosis misdiagnosis in remote mining belts.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Technology</h4>
+            <ul>
+                <li><a href="solutions.html">Edge AI Architecture</a></li>
+                <li><a href="solutions.html">Web-Bluetooth</a></li>
+                <li><a href="solutions.html">mTLS Security</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <ul>
+                <li><a href="app/index.html">Launch Clinical App</a></li>
+                <li><a href="about.html">Our Mission</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 MaruCure Intelligence. Built for the Government of Rajasthan.</p>
+        <p>Phase 1 Clinical Trial Prototype</p>
+    </div>
+</footer>
+
+</body>
+</html>

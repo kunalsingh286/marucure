@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: rajcxr_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_secure_password
+      POSTGRES_DB: rajcxr
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - rajcxr_secure_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  sync-backend:
+    build: 
+      context: ../backend_sync
+      dockerfile: Dockerfile
+    container_name: rajcxr_sync_node
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres_secure_password@postgres-db:5432/rajcxr?sslmode=disable
+      - RAJ_SEWA_GATEWAY_URL=http://mock-gateway:8081
+    ports:
+      - "8080:8080"
+    networks:
+      - rajcxr_secure_net
+
+  mock-gateway:
+    image: mockserver/mockserver:latest
+    container_name: rajcxr_mock_sewa_dwaar
+    ports:
+      - "8081:1080"
+    networks:
+      - rajcxr_secure_net
+
+networks:
+  rajcxr_secure_net:
+    driver: bridge
+
+volumes:
+  pgdata:

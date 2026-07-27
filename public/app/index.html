@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaruCure // Offline PWA Node</title>
+
+    <!-- Web App Manifest for Zero-Network Installation -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI1MCIgZmlsbD0iIzBkNmVmZCIvPjwvc3ZnPg==">
+
+    <!-- Google Fonts for Premium Aesthetics -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="dashboard.css?v=2">
+
+    <!-- TensorFlow.js Dependencies -->
+    <!-- TFJS Edge AI Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-tflite@0.0.1-alpha.9/dist/tf-tflite.min.js"></script>
+
+    <!-- Clinical DICOM Parser -->
+    <script src="https://unpkg.com/daikon@1.2.43/release/daikon-min.js"></script>
+
+    <!-- Offline IndexedDB Wrapper -->
+    <script src="https://cdn.jsdelivr.net/npm/idb@7/build/umd.js"></script>
+
+    <!-- Nexus AI Integration Libraries -->
+    <!-- OpenCV for Quality Pre-Filter & Iso-Contours -->
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="console.log('OpenCV Loaded');"></script>
+    <!-- jsPDF & QRCode for Structured Reporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="logo">MARUCURE // <span class="accent">OFFLINE PWA NODE</span></div>
+        <div class="controls">
+            <span class="label">Hardware Emulator</span>
+            <label class="switch">
+                <input type="checkbox" id="hardware-emulator" checked>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <!-- Left Pane: Outbox Queue -->
+        <aside class="sidebar">
+            <button id="btn-sync" class="btn-primary" onclick="syncOutbox()">
+                <span class="material-icons">sync</span> Sync to SDC (Outbox)
+            </button>
+            
+            <div style="margin-top: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-icons" style="font-size: 1rem; color: var(--text-secondary);">filter_alt</span>
+                <select id="queue-filter" onchange="renderOutbox()" style="flex: 1; padding: 0.3rem; border-radius: 4px; border: 1px solid var(--border-subtle); background: var(--bg-light); font-size: 0.85rem; font-family: 'Inter';">
+                    <option value="all">View All Patients</option>
+                    <option value="high">Critical Risk (>= 7.5)</option>
+                    <option value="moderate">Observation (4.0 - 7.4)</option>
+                    <option value="low">Safe (< 4.0)</option>
+                </select>
+            </div>
+
+            <div class="queue-list" id="queue-list">
+                <!-- Example Queue Items -->
+                <div class="queue-item pending">
+                    <span class="material-icons status-icon">hourglass_empty</span>
+                    <div class="item-info">
+                        <h4>Rajesh Kumar</h4>
+                        <p>ID: 8847291045</p>
+                    </div>
+                    <div class="item-risk">Risk: 84.2</div>
+                </div>
+                <div class="queue-item success">
+                    <span class="material-icons status-icon">check_circle</span>
+                    <div class="item-info">
+                        <h4>Amit Singh</h4>
+                        <p>ID: 3349102844</p>
+                    </div>
+                    <div class="item-risk">Risk: 12.1</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Pane: Diagnostic View -->
+        <main class="main-content">
+
+            <div class="status-panel" style="margin-bottom: 2rem; background: var(--bg-panel);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="section-title" style="margin: 0;">Step 1: Raj Sewa Dwaar Gateway</h2>
+                    <span style="font-size: 0.75rem; background: #e5e7eb; padding: 4px 8px; border-radius: 4px; font-weight: 600;">Sandbox Mode</span>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <input type="text" id="jan-aadhaar-search" placeholder="Enter 10-Digit Jan Aadhaar ID (e.g. JA-4492)" style="width: 100%; padding: 0.8rem; border: 2px solid var(--border-subtle); border-radius: 8px; font-size: 1rem; font-weight: 600;">
+                    </div>
+                    <button id="btn-fetch-citizen" class="btn-primary" style="padding: 0.8rem 2rem; border-radius: 8px;" onclick="fetchCitizenData()">
+                        <span class="material-icons" id="fetch-icon">search</span> <span id="fetch-text">Fetch Record</span>
+                    </button>
+                </div>
+
+                <!-- Hidden Citizen Profile Card -->
+                <div id="citizen-profile-card" style="display: none; margin-top: 1.5rem; background: var(--bg-light); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #d1d5db; padding-bottom: 1rem;">
+                        <span class="material-icons" style="font-size: 3rem; color: var(--accent-blue);">account_circle</span>
+                        <div>
+                            <h3 id="profile-name" style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; color: var(--text-primary);">--</h3>
+                            <p id="profile-id-display" style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 600;">--</p>
+                        </div>
+                        <div style="margin-left: auto; text-align: right;">
+                            <span style="display: inline-block; background: var(--accent-green); color: white; font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 12px; text-transform: uppercase;">Verified Identity</span>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase;">Demographics</p>
+                            <p style="font-size: 0.95rem; font-weight: 500;" id="profile-demographics">--</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase;">Occupation / Sector</p>
+                            <p style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);" id="profile-occupation">--</p>
+                            <!-- Hidden input fields to store state for the math engine -->
+                            <input type="hidden" id="hidden-exposure-years" value="0">
+                            <input type="hidden" id="hidden-occupation-type" value="administrative">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Edge AI -->
+            <h2 class="section-title">Step 2: Edge AI Pathology (X-Ray Scan)</h2>
+            <div class="actions" style="margin-bottom: 1rem;">
+                <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                <button class="btn-secondary" onclick="document.getElementById('file-upload').click()" style="width: 100%; justify-content: center; background: var(--text-primary); color: white; padding: 1.2rem; font-size: 1.1rem; border-radius: 8px;">
+                    <span class="material-icons" style="font-size: 1.5rem;">image_search</span> Upload Real X-Ray & Execute Edge AI
+                </button>
+            </div>
+            
+            <div class="image-viewer" id="image-viewer" style="position: relative; overflow: hidden; margin-bottom: 1rem;">
+                <span class="placeholder-text" id="placeholder-text">No Image Loaded</span>
+                
+                <!-- Original Image Canvas -->
+                <canvas id="image-canvas" style="display: none; width: 100%; height: 100%; object-fit: contain; z-index: 1; position: relative;"></canvas>
+                
+                <!-- Real-Time Pixel Extraction Heatmap Overlay -->
+                <canvas id="heatmap-canvas" style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 2; opacity: 0.6; pointer-events: none; mix-blend-mode: multiply;"></canvas>
+                
+                <!-- Topographical Iso-Contour Canvas -->
+                <canvas id="contour-canvas" style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 3; pointer-events: none;"></canvas>
+                
+                <!-- Scanning Overlay Animation (For Visual Staggering) -->
+                <div id="scan-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: rgba(14, 165, 233, 0.8); box-shadow: 0 0 15px rgba(14, 165, 233, 1); z-index: 3;"></div>
+            </div>
+
+            <style>
+                @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+                .animate-scan { animation: scan 2s linear infinite; }
+            </style>
+
+            <div class="status-panel" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <p id="inference-status" class="status-text waiting" style="margin: 0;">Waiting for X-Ray input...</p>
+                    
+                    <!-- Multi-Toggle Visual Overlays -->
+                    <div id="explainability-controls" style="display: none; align-items: center; gap: 1rem; background: var(--bg-light); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                        <label style="font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <input type="radio" name="overlay-toggle" value="raw" onchange="toggleOverlayMode()" checked> Raw X-Ray
+                        </label>
+                        <label style="font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <input type="radio" name="overlay-toggle" value="heatmap" onchange="toggleOverlayMode()"> Grad-CAM Heatmap
+                        </label>
+                        <label style="font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; color: var(--accent-orange);">
+                            <input type="radio" name="overlay-toggle" value="contour" onchange="toggleOverlayMode()"> Iso-Contours
+                        </label>
+                    </div>
+                </div>
+                <div class="dual-model-container" id="dual-model-container" style="display: none; gap: 1rem;">
+                    <div class="model-card general-model" style="flex: 1;">
+                        <div class="model-badge">CE Certified</div>
+                        <h4>Normal Model (FIR)</h4>
+                        <p>Scans lung field for general abnormalities.</p>
+                        <div class="model-result" id="fir-result">--</div>
+                        <span class="material-icons info-icon" onclick="showExplanation('fir')" title="How is this calculated?">info</span>
+                    </div>
+                    <div class="model-card pathology-model" style="flex: 1;">
+                        <div class="model-badge">CE Certified</div>
+                        <h4>Silicosis Model</h4>
+                        <p>Hunts for specific nodular opacities.</p>
+                        <div class="model-result" id="silicosis-result">--</div>
+                        <span class="material-icons info-icon" onclick="showExplanation('silicosis')" title="How is this calculated?">info</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Clinical Spirometry & Final Synthesis -->
+            <div class="status-panel" style="margin-bottom: 2rem; background: var(--bg-panel);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 class="section-title" style="margin: 0;">Step 3: Clinical Spirometry & Final Synthesis</h2>
+                    <span style="font-size: 0.75rem; background: rgba(13, 110, 253, 0.1); color: var(--accent-blue); padding: 4px 8px; border-radius: 4px; font-weight: 600; display: flex; align-items: center; gap: 4px;"><span class="material-icons" style="font-size: 14px;">bluetooth</span> BLE Ready</span>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+                    <button class="btn-hardware" id="btn-spirometer" onclick="connectSpirometer()" style="flex-shrink: 0; padding: 1rem 1.5rem;">
+                        <span class="material-icons">sensors</span> Connect & Capture Breath
+                    </button>
+                    
+                    <div id="spiro-result-box" style="flex: 1; padding: 1rem; background: var(--bg-light); border: 1px dashed var(--border-subtle); border-radius: 8px; display: flex; justify-content: space-between; align-items: center; min-height: 70px;">
+                        <span style="color: var(--text-secondary); font-weight: 500;" id="spiro-status-text">Awaiting Hardware Connection...</span>
+                        <div style="text-align: right; display: none;" id="spiro-metrics-display">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">FEV1/FVC Ratio</span><br/>
+                            <span style="font-size: 1.5rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-primary);" id="spiro-ratio-value">--</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dual-model-container" style="display: flex; gap: 1rem;">
+                    <div class="model-card risk-model" style="flex: 1; border-left: 4px solid var(--accent-orange); background: linear-gradient(to right, rgba(249, 115, 22, 0.05), transparent); position: relative;">
+                        <div class="model-badge" style="background: var(--accent-orange); color: white; border: none;">Vector A + Exposure</div>
+                        <h4>Anatomical Pillar</h4>
+                        <p>Structural Hazard (Pathology)</p>
+                        <div class="model-result" id="structural-risk-result" style="color: var(--text-secondary);">Pending...</div>
+                    </div>
+                    
+                    <div class="model-card risk-model" style="flex: 1; border-left: 4px solid var(--accent-orange); background: linear-gradient(to right, rgba(249, 115, 22, 0.05), transparent); position: relative;">
+                        <div class="model-badge" style="background: var(--accent-orange); color: white; border: none;">Vector B + Exposure</div>
+                        <h4>Physiological Pillar</h4>
+                        <p>Functional Hazard (Impairment)</p>
+                        <div class="model-result" id="functional-risk-result" style="color: var(--text-secondary);">Pending...</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn-primary" id="btn-finalize" onclick="finalizeTriage()" style="flex: 2; background: var(--accent-green); display: none;">
+                        <span class="material-icons">done_all</span> Lock Final Score & Add to Outbox
+                    </button>
+                    
+                    <button class="btn-primary" id="btn-print-pdf" onclick="generateStructuredPDF()" style="flex: 1; background: var(--accent-blue); display: none;">
+                        <span class="material-icons">picture_as_pdf</span> Print Referral Slip
+                    </button>
+                    
+                    <button class="btn-primary" id="btn-print-thermal" onclick="printThermalReceipt()" style="flex: 1; background: #475569; display: none;">
+                        <span class="material-icons">receipt_long</span> Print Thermal Receipt
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Explainability Modal Overlay -->
+    <div id="explanation-modal" class="modal-overlay" onclick="closeExplanation(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="material-icons modal-close" onclick="closeExplanation()">close</span>
+            <h3 class="modal-title" id="modal-title"><span class="material-icons" style="color: var(--accent-blue);">analytics</span> Title</h3>
+            <div class="modal-body" id="modal-body">
+                Explanation text goes here.
+            </div>
+        </div>
+    </div>
+
+    <!-- Thermal Receipt Modal Overlay -->
+    <div id="receipt-modal" class="modal-overlay" onclick="closeReceipt(event)" style="display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div class="receipt-content" onclick="event.stopPropagation()" style="background: white; width: 320px; padding: 20px; font-family: 'Courier New', Courier, monospace; color: black; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-size: 0.85rem; line-height: 1.4; margin-top: 2rem; margin-bottom: 2rem; overflow-y: auto; max-height: 90vh;">
+            <div style="text-align: center; border-bottom: 2px dashed #000; padding-bottom: 10px; margin-bottom: 10px;">
+                <h3 style="margin: 0; font-size: 1.2rem; text-transform: uppercase; font-weight: bold;">MaruCure Triage</h3>
+                <p style="margin: 5px 0 0 0;">Offline Mining Node</p>
+            </div>
+            
+            <div id="receipt-body">
+                <!-- Content injected via JS -->
+            </div>
+            
+            <div style="text-align: center; border-top: 2px dashed #000; padding-top: 10px; margin-top: 10px;">
+                <div id="receipt-qr" style="display: flex; justify-content: center; margin-bottom: 10px;"></div>
+                <p style="font-size: 0.7rem; margin: 0 0 10px 0;">Scan at District Hospital</p>
+                <button onclick="closeReceipt()" style="padding: 5px 15px; background: #000; color: #fff; border: none; cursor: pointer; font-family: inherit; font-weight: bold;">[ CLOSE ]</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js?v=4"></script>
+    
+    <!-- Service Worker Removed for Demo Stability -->
+</body>
+
+</html>

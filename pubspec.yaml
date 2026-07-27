@@ -1,0 +1,25 @@
+name: raj_cxr_platform
+description: MaruCure Silicosis Triage Engine
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_blue_plus: ^1.31.0
+  idb_shim: ^2.4.0
+  image_picker: ^1.0.4
+  image: ^4.1.3
+  js: ^0.6.7
+  provider: ^6.1.1
+  path_provider: ^2.1.1
+  http: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  test: ^1.24.0
+  cupertino_icons: ^1.0.8

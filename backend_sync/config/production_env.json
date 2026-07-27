@@ -1,0 +1,11 @@
+{
+  "ENVIRONMENT": "PRODUCTION_SDC",
+  "JAN_AADHAAR_API_URL": "https://api.sewadaar.rajasthan.gov.in/v2/residents/verify",
+  "RAJ_SSO_OAUTH_TOKEN_URL": "https://sso.rajasthan.gov.in/oauth2/token/validate",
+  "STATE_SMS_GATEWAY_URL": "https://communication.rajasthan.gov.in/api/v1/sms/send",
+  "POSTGRES_POOL_MAX_CONNS": 50,
+  "APP_CODE": "MARUCURE_SDC_01",
+  "SCHEME_CODE": "SILICOSIS_GRANT_24",
+  "SEWADWAAR_PUBLIC_KEY": "INSERT_STATE_RSA_PUBLIC_KEY_HERE",
+  "CLIENT_PRIVATE_KEY": "INSERT_LOCAL_RSA_PRIVATE_KEY_HERE"
+}
